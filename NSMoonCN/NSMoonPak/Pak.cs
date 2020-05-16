@@ -51,11 +51,12 @@ namespace NSMoonPak
                 {
                     //跳过第一行
                     reader.ReadLine();
-                    string text = reader.ReadLine().TrimStart(':');
+                    string text = reader.ReadLine().TrimStart(':').TrimEnd(' ').TrimEnd((char)0x20);
                     //跳过分割
                     reader.ReadLine();
                     byte[] data = Encoding.GetEncoding("gb2312").GetBytes(text);
-                    data[data.Length - 1] = 0;
+                    if (data.Last() != 0)
+                        data = data.Concat(new byte[] { 0 }).ToArray();
                     Scw4_Entry entry = new Scw4_Entry() { offset = (uint)(data_decompress.Position - position), length = (uint)data.Length };
                     data_decompress.Write(data, 0, data.Length);
                     byte[] header = PakUtils.ToByteArray(entry);
@@ -232,6 +233,7 @@ namespace NSMoonPak
                         string text = Encoding.GetEncoding("Shift_JIS").GetString(data);
                         writer.WriteLine($":{text}");
                         writer.WriteLine($":{text}");
+                        File.AppendAllText("total.txt", text + Environment.NewLine, Encoding.GetEncoding("GB2312"));
                         writer.WriteLine();
                     }
                 }
