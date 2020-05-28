@@ -100,10 +100,6 @@ namespace NSMoonPak
                 pak_data.Write(scw, 0, scw.Length);
                 byte[] temp = PakUtils.ToByteArray(pak_entry);
                 pak_index.Write(temp, 0, temp.Length);
-                if (pak_entry.name == "SysEntry")
-                {
-                    Console.WriteLine();
-                }
             }
 
             //压缩索引
