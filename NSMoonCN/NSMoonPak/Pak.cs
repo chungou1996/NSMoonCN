@@ -45,7 +45,7 @@ namespace NSMoonPak
                 header_decompress.Write(instruction_entries, 0, instruction_entries.Length);
 
                 long position = data_decompress.Position;
-                StreamReader reader = new StreamReader(Path.Combine(directory, "script.txt"), Encoding.GetEncoding("GB2312"));
+                StreamReader reader = new StreamReader(directory + ".txt", Encoding.GetEncoding("GB2312"));
                 int script_count = 0;
                 while (!reader.EndOfStream)
                 {
@@ -175,7 +175,6 @@ namespace NSMoonPak
         {
             //解压缩
             Scw_Header scw4_header = PakUtils.ToStruct<Scw_Header>(data_stream);
-            var x = PakUtils.ToByteArray(scw4_header);
             byte[] scw_compress = new byte[scw4_header.comprlen];
             data_stream.Read(scw_compress, 0, scw_compress.Length);
 
@@ -219,7 +218,8 @@ namespace NSMoonPak
                     }
                 }
 
-                using (StreamWriter writer = new StreamWriter(Path.Combine(directory, "script.txt"), false, Encoding.GetEncoding("GB2312")))
+                using (StreamWriter writer = new StreamWriter(Path.Combine(OutDirectory, pak_entry.name + ".txt"), false, Encoding.GetEncoding("GB2312")))
+                //using (StreamWriter writer = new StreamWriter(Path.Combine(directory, "script.txt"), false, Encoding.GetEncoding("GB2312")))
                 {
                     foreach (Scw4_Entry scw_entry in script_entries)
                     {
@@ -229,7 +229,6 @@ namespace NSMoonPak
                         string text = Encoding.GetEncoding("Shift_JIS").GetString(data);
                         writer.WriteLine($":{text}");
                         writer.WriteLine($":{text}");
-                        File.AppendAllText("total.txt", text + Environment.NewLine, Encoding.GetEncoding("GB2312"));
                         writer.WriteLine();
                     }
                 }
